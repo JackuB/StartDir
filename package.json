@@ -1,0 +1,10 @@
+{
+  "name": "StartScreen",
+  "version": "0.0.1",
+  "devDependencies": {
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-less": "*"
+  }
+}
