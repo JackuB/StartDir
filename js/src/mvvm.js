@@ -6,7 +6,6 @@ var startApp = function() {
 	self.search = ko.observable("");
 	self.active = ko.observable(0);
 
-
 	/**
 	 * dir class
 	 * @param  {object} object of dir
@@ -29,6 +28,18 @@ var startApp = function() {
 				return false;
 			}
 		});
+		thisDir.isActive = function(object) {
+			if(thisDir.folderName() === self.dirs()[self.active()].folderName()) {
+				if(thisDir.isVisible()) {
+					return true;
+				} else {
+					self.findNextVisible();
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
 		thisDir.go = function() {
 			window.location.href=window.location.href + thisDir.folderName();
 		}
@@ -38,24 +49,6 @@ var startApp = function() {
 	for (var i = 0; i < phpJSONLenght; i++) {
 		self.dirs.push(new dir(phpJSON[i]));
 	};
-
-	/**
-	 * Check, whether given object is active
-	 * @param  {object}
-	 * @return {Boolean}
-	 */
-	self.isActive = function(object) {
-		if(object.folderName() === self.dirs()[self.active()].folderName()) {
-			if(object.isVisible()) {
-				return true;
-			} else {
-				self.findNextVisible();
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
 
 	/**
 	 * set self.active() to next visible object. If it reaches end, it starts from beginning

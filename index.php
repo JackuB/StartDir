@@ -12,7 +12,7 @@
 	<div data-bind="foreach: dirs" class="dirs">
 		<div data-bind="
 			visible: isVisible,
-			css: {'active': $root.isActive($data)},
+			css: {'active': isActive($data)}
 			" class="box">
 			<span data-bind="text: folderName, click: go"></span>
 			<span class="visibilityIcon">
@@ -40,13 +40,13 @@
 		die;
 	}
 
-	$disallowedDirs = [
+	$disallowedDirs = array(
 		".",
 		"..",
 		".git"
-	];
+	);
 
-	$dirArray = [];
+	$dirArray = array();
 	if ($handle = opendir('.')) {
 		$i = 0;
 	    while (false !== ($entry = readdir($handle))) {
@@ -61,11 +61,16 @@
 	    closedir($handle);
 	}
 
-	/* Read JSON */
-	$loaded_json = file_get_contents($json_file);
+	if(file_exists($json_file)) {
+		/* Read JSON */
+		$loaded_json = file_get_contents($json_file);
 
-	/* Intersect JSON and computed array */
-	$returnedArray = array_intersect_key($dirArray, json_decode($loaded_json, true));
+		/* Intersect JSON and computed array */
+		$returnedArray = array_intersect_key($dirArray, json_decode($loaded_json, true));
+	} else {
+		file_put_contents($json_file, json_encode($dirArray));
+		$returnedArray = $dirArray;
+	}
 ?>
 
 <script type="text/javascript">
@@ -178,7 +183,6 @@ var startApp = function() {
 	self.search = ko.observable("");
 	self.active = ko.observable(0);
 
-
 	/**
 	 * dir class
 	 * @param  {object} object of dir
@@ -201,6 +205,18 @@ var startApp = function() {
 				return false;
 			}
 		});
+		thisDir.isActive = function(object) {
+			if(thisDir.folderName() === self.dirs()[self.active()].folderName()) {
+				if(thisDir.isVisible()) {
+					return true;
+				} else {
+					self.findNextVisible();
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
 		thisDir.go = function() {
 			window.location.href=window.location.href + thisDir.folderName();
 		}
@@ -210,24 +226,6 @@ var startApp = function() {
 	for (var i = 0; i < phpJSONLenght; i++) {
 		self.dirs.push(new dir(phpJSON[i]));
 	};
-
-	/**
-	 * Check, whether given object is active
-	 * @param  {object}
-	 * @return {Boolean}
-	 */
-	self.isActive = function(object) {
-		if(object.folderName() === self.dirs()[self.active()].folderName()) {
-			if(object.isVisible()) {
-				return true;
-			} else {
-				self.findNextVisible();
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
 
 	/**
 	 * set self.active() to next visible object. If it reaches end, it starts from beginning

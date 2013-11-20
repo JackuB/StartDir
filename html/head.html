@@ -12,7 +12,7 @@
 	<div data-bind="foreach: dirs" class="dirs">
 		<div data-bind="
 			visible: isVisible,
-			css: {'active': $root.isActive($data)},
+			css: {'active': isActive($data)}
 			" class="box">
 			<span data-bind="text: folderName, click: go"></span>
 			<span class="visibilityIcon">
