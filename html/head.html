@@ -2,17 +2,30 @@
 <head>
     <meta charset="utf-8">
     <title>Start screen</title>
-    <style>
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1 user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 </head>
 <body>
 
 <div class="wrap">
 	<input type="text" class="searchField" autofocus data-bind="value: search, valueUpdate: 'keyup'" />
-
 	<div data-bind="foreach: dirs" class="dirs">
-		<div data-bind="text: folderName, visible: $root.isVisible(folderName), css: {'active': $root.isActive(folderName)}" class="box">
-
+		<div data-bind="
+			visible: isVisible,
+			css: {'active': $root.isActive($data)},
+			" class="box">
+			<span data-bind="text: folderName, click: go"></span>
+			<span class="visibilityIcon">
+				<span data-bind="visible: hidden() === true, click: toggleHidden" class="icon-eye"></span>
+				<span data-bind="visible: hidden() === false, click: toggleHidden" class="icon-eye-blocked"></span>
+			</span>
 		</div>
 	</div>
 </div>
+
+
+<div class="settingsIcon">
+	<span class="icon-cogs"></span>
+</div>
+
+<div class="bottomGrad"></div>

@@ -58,7 +58,7 @@ module.exports = function(grunt) {
                     compress: true
                 },
                 files: {
-                    "css/app.min.css": "css/less/app.less"
+                    "css/app.min.css": "css/less/*.less"
                 }
             },
         }

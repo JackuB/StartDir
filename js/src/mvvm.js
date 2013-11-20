@@ -1,13 +1,52 @@
 var startApp = function() {
+	/*
+		Setup
+	 */
 	var self = this;
-	self.dirs = ko.observable(phpJSON);
 	self.search = ko.observable("");
-
 	self.active = ko.observable(0);
 
-	self.isActive = function(folderName) {
-		if(folderName === self.dirs()[self.active()].folderName) {
-			if(self.isVisible(folderName)) {
+
+	/**
+	 * dir class
+	 * @param  {object} object of dir
+	 * @return {void}
+	 */
+	var dir = function(dir) {
+		var thisDir = this;
+		thisDir.hidden = ko.observable(dir.hidden);
+		thisDir.folderName = ko.observable(dir.folderName);
+		thisDir.toggleHidden = function() {
+			thisDir.hidden(!thisDir.hidden());
+		}
+		thisDir.isVisible = ko.computed(function() {
+			if(thisDir.hidden()) {
+				return false;
+			}
+			if(fuzzy(thisDir.folderName(),self.search())) {
+				return true;
+			} else {
+				return false;
+			}
+		});
+		thisDir.go = function() {
+			window.location.href=window.location.href + thisDir.folderName();
+		}
+	}
+	self.dirs = ko.observableArray();
+	var phpJSONLenght = phpJSON.length;
+	for (var i = 0; i < phpJSONLenght; i++) {
+		self.dirs.push(new dir(phpJSON[i]));
+	};
+
+	/**
+	 * Check, whether given object is active
+	 * @param  {object}
+	 * @return {Boolean}
+	 */
+	self.isActive = function(object) {
+		if(object.folderName() === self.dirs()[self.active()].folderName()) {
+			if(object.isVisible()) {
 				return true;
 			} else {
 				self.findNextVisible();
@@ -18,6 +57,10 @@ var startApp = function() {
 		}
 	}
 
+	/**
+	 * set self.active() to next visible object. If it reaches end, it starts from beginning
+	 * @return {void}
+	 */
 	self.findNextVisible = function() {
 		var numberOfDirs = self.dirs().length - 1;
 		if(self.active() < numberOfDirs) {
@@ -27,6 +70,10 @@ var startApp = function() {
 		}
 	};
 
+	/**
+	 * set self.active() to next visible object. If it reaches end, it starts from beginning
+	 * @return {void}
+	 */
 	self.findPrevVisible = function() {
 		var numberOfDirs = self.dirs().length - 1;
 		if(self.active() < numberOfDirs+1 && self.active() > 0) {
@@ -36,25 +83,13 @@ var startApp = function() {
 		}
 	};
 
-	self.isVisible = function(folderName) {
-		if(fuzzy(folderName,self.search())) {
-			return true;
-		} else {
-			return false;
-		}
-	};
-
-	self.goActive = function() {
-		window.location.href=window.location.href + self.dirs()[self.active()].folderName;
-	}
-
 	/*
 		Key binds
 	*/
 	$(document).keypress(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(keycode == '13'){
-			self.goActive();
+			self.dirs()[self.active()].go();
 		}
 	});
 	$(document).keydown(function(event){
@@ -69,6 +104,12 @@ var startApp = function() {
 }
 ko.applyBindings(new startApp);
 
+/**
+ * Fuzzy search
+ * @param  {string} haystack
+ * @param  {string} string to find
+ * @return {bool}
+ */
 function fuzzy (h,s) {
     var hay = h.toLowerCase(), i = 0, n = 0, l;
     s = s.toLowerCase();

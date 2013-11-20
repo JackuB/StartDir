@@ -1,5 +1,5 @@
 body {
-	padding: 20px;
+	padding: 10px;
 	background: #ff7070;
 	color:white;
 	font-family: sans-serif;
@@ -18,7 +18,7 @@ body {
 
 .searchField {
 	width: 100%;
-	margin: 5px auto;
+	margin: 5px auto 1px auto;
 	font-size: 36px;
 	background: transparent;
 	border:none;
@@ -40,7 +40,54 @@ body {
 	transition: .1s;
 	background: #ff8080;
 	border:2px solid rgba(255,255,255,0.1);
+	cursor: pointer;
+	.visibilityIcon {
+		float: right;
+		opacity: 0;
+		padding-top: 4px;
+		span {
+			opacity: 0.6;
+			transition: .3s;
+			&:hover {
+				opacity: 1;
+			}
+		}
+	}
 	&:hover, &:focus, &.active {
 		border:2px solid white;
 	}
+	&:hover, &:focus {
+		.visibilityIcon {
+			opacity: 1;
+		}
+	}
+}
+
+.settingsIcon {
+	position:fixed;
+	top:10px;
+	right:10px;
+	font-size:18px;
+	opacity:0.6;
+	transition:.4s;
+	cursor:pointer;
+	&:hover {
+		opacity:1;
+	}
+}
+
+.bottomGrad {
+	position:fixed;
+	left:0;
+	bottom:0;
+	right:0;
+	height: 140px;
+
+	background: -moz-linear-gradient(top,  rgba(255,112,112,0) 0%, rgba(255,112,112,1) 82%, rgba(255,112,112,1) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,112,112,0)), color-stop(82%,rgba(255,112,112,1)), color-stop(100%,rgba(255,112,112,1)));
+	background: -webkit-linear-gradient(top,  rgba(255,112,112,0) 0%,rgba(255,112,112,1) 82%,rgba(255,112,112,1) 100%);
+	background: -o-linear-gradient(top,  rgba(255,112,112,0) 0%,rgba(255,112,112,1) 82%,rgba(255,112,112,1) 100%);
+	background: -ms-linear-gradient(top,  rgba(255,112,112,0) 0%,rgba(255,112,112,1) 82%,rgba(255,112,112,1) 100%);
+	background: linear-gradient(to bottom,  rgba(255,112,112,0) 0%,rgba(255,112,112,1) 82%,rgba(255,112,112,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ff7070', endColorstr='#ff7070',GradientType=0 );
 }

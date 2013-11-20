@@ -2,24 +2,48 @@
 <head>
     <meta charset="utf-8">
     <title>Start screen</title>
-    <style>
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1 user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 </head>
 <body>
 
 <div class="wrap">
 	<input type="text" class="searchField" autofocus data-bind="value: search, valueUpdate: 'keyup'" />
-
 	<div data-bind="foreach: dirs" class="dirs">
-		<div data-bind="text: folderName, visible: $root.isVisible(folderName), css: {'active': $root.isActive(folderName)}" class="box">
-
+		<div data-bind="
+			visible: isVisible,
+			css: {'active': $root.isActive($data)},
+			" class="box">
+			<span data-bind="text: folderName, click: go"></span>
+			<span class="visibilityIcon">
+				<span data-bind="visible: hidden() === true, click: toggleHidden" class="icon-eye"></span>
+				<span data-bind="visible: hidden() === false, click: toggleHidden" class="icon-eye-blocked"></span>
+			</span>
 		</div>
 	</div>
 </div>
-<style>body{padding:20px;background:#ff7070;color:white;font-family:sans-serif;font-weight:400;font-size:24px}*{box-sizing:border-box}.wrap{max-width:540px;margin:0 auto}.searchField{width:100%;margin:5px auto;font-size:36px;background:transparent;border:none;padding:6px;color:white;transition:.3s;border:3px solid rgba(0,0,0,0.3);box-shadow:0;outline:none}.searchField:focus{border:3px solid white;outline:none}.box{padding:4px 6px;margin:3px 0;transition:.1s;background:#ff8080;border:2px solid rgba(255,255,255,0.1)}.box:hover,.box:focus,.box.active{border:2px solid white}</style><?php
+
+
+<div class="settingsIcon">
+	<span class="icon-cogs"></span>
+</div>
+
+<div class="bottomGrad"></div><style>body{padding:10px;background:#ff7070;color:white;font-family:sans-serif;font-weight:400;font-size:24px}*{box-sizing:border-box}.wrap{max-width:540px;margin:0 auto}.searchField{width:100%;margin:5px auto 1px auto;font-size:36px;background:transparent;border:none;padding:6px;color:white;transition:.3s;border:3px solid rgba(0,0,0,0.3);box-shadow:0;outline:none}.searchField:focus{border:3px solid white;outline:none}.box{padding:4px 6px;margin:3px 0;transition:.1s;background:#ff8080;border:2px solid rgba(255,255,255,0.1);cursor:pointer}.box .visibilityIcon{float:right;opacity:0;padding-top:4px}.box .visibilityIcon span{opacity:0.6;transition:.3s}.box .visibilityIcon span:hover{opacity:1}.box:hover,.box:focus,.box.active{border:2px solid white}.box:hover .visibilityIcon,.box:focus .visibilityIcon{opacity:1}.settingsIcon{position:fixed;top:10px;right:10px;font-size:18px;opacity:0.6;transition:.4s;cursor:pointer}.settingsIcon:hover{opacity:1}.bottomGrad{position:fixed;left:0;bottom:0;right:0;height:140px;background:-moz-linear-gradient(top, rgba(255,112,112,0) 0, #ff7070 82%, #ff7070 100%);background:-webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255,112,112,0)), color-stop(82%, #ff7070), color-stop(100%, #ff7070));background:-webkit-linear-gradient(top, rgba(255,112,112,0) 0, #ff7070 82%, #ff7070 100%);background:-o-linear-gradient(top, rgba(255,112,112,0) 0, #ff7070 82%, #ff7070 100%);background:-ms-linear-gradient(top, rgba(255,112,112,0) 0, #ff7070 82%, #ff7070 100%);background:linear-gradient(to bottom, rgba(255,112,112,0) 0, #ff7070 82%, #ff7070 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ff7070', endColorstr='#ff7070', GradientType=0)}
+@font-face{font-family:'icomoon';src:url(data:application/x-font-ttf;charset=utf-8;base64,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) format('truetype'),url(data:application/font-woff;charset=utf-8;base64,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) format('woff');font-weight:normal;font-style:normal}[class^="icon-"],[class*=" icon-"]{font-family:'icomoon';speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.icon-eye-blocked:before{content:"\e600"}.icon-eye:before{content:"\e601"}.icon-cogs:before{content:"\e602"}</style><?php
+
+	$json_file = "start_config.json";
+
+	if(isset($_POST["save_json"])) {
+		$saved = json_decode($_POST["save_json"]);
+		file_put_contents($json_file, $saved);
+		echo "Saved";
+		die;
+	}
+
 	$disallowedDirs = [
 		".",
-		".."
+		"..",
+		".git"
 	];
 
 	$dirArray = [];
@@ -28,8 +52,7 @@
 	    while (false !== ($entry = readdir($handle))) {
 	        if (is_dir($entry) && !in_array($entry, $disallowedDirs)) {
 	            $dirArray[$i] = array(
-	            	"color" => "",
-	            	"size" => "",
+	            	"hidden" => false,
 	            	"folderName" => $entry
 	            	);
 	            $i++;
@@ -39,11 +62,14 @@
 	}
 
 	/* Read JSON */
-	$json_file = "start_config.json";
+	$loaded_json = file_get_contents($json_file);
+
+	/* Intersect JSON and computed array */
+	$returnedArray = array_intersect_key($dirArray, json_decode($loaded_json, true));
 ?>
 
 <script type="text/javascript">
-	var phpJSON = <?php print_r(json_encode($dirArray)); ?>;
+	var phpJSON = <?php print_r(json_encode($returnedArray)); ?>;
 </script><script type="text/javascript">/*! jQuery v1.10.2 | (c) 2005, 2013 jQuery Foundation, Inc. | jquery.org/license
 //@ sourceMappingURL=jquery-1.10.2.min.map
 */
@@ -145,15 +171,54 @@ new a.J;a.La(a.J.Aa);a.b("nativeTemplateEngine",a.J);(function(){a.Ba=function()
 "{{/ko_with}}"),b.data("precompiled",h));b=[e.$data];e=u.extend({koBindingContext:e},g.templateOptions);e=u.tmpl(h,b,e);e.appendTo(w.createElement("div"));u.fragments={};return e};this.createJavaScriptEvaluatorBlock=function(a){return"{{ko_code ((function() { return "+a+" })()) }}"};this.addTemplate=function(a,b){w.write("<script type='text/html' id='"+a+"'>"+b+"\x3c/script>")};0<a&&(u.tmpl.tag.ko_code={open:"__.push($1 || '');"},u.tmpl.tag.ko_with={open:"with($1) {",close:"} "})};a.Ba.prototype=
 new a.w;var b=new a.Ba;0<b.Rb&&a.La(b);a.b("jqueryTmplTemplateEngine",a.Ba)})()})})();})();
 var startApp = function() {
+	/*
+		Setup
+	 */
 	var self = this;
-	self.dirs = ko.observable(phpJSON);
 	self.search = ko.observable("");
-
 	self.active = ko.observable(0);
 
-	self.isActive = function(folderName) {
-		if(folderName === self.dirs()[self.active()].folderName) {
-			if(self.isVisible(folderName)) {
+
+	/**
+	 * dir class
+	 * @param  {object} object of dir
+	 * @return {void}
+	 */
+	var dir = function(dir) {
+		var thisDir = this;
+		thisDir.hidden = ko.observable(dir.hidden);
+		thisDir.folderName = ko.observable(dir.folderName);
+		thisDir.toggleHidden = function() {
+			thisDir.hidden(!thisDir.hidden());
+		}
+		thisDir.isVisible = ko.computed(function() {
+			if(thisDir.hidden()) {
+				return false;
+			}
+			if(fuzzy(thisDir.folderName(),self.search())) {
+				return true;
+			} else {
+				return false;
+			}
+		});
+		thisDir.go = function() {
+			window.location.href=window.location.href + thisDir.folderName();
+		}
+	}
+	self.dirs = ko.observableArray();
+	var phpJSONLenght = phpJSON.length;
+	for (var i = 0; i < phpJSONLenght; i++) {
+		self.dirs.push(new dir(phpJSON[i]));
+	};
+
+	/**
+	 * Check, whether given object is active
+	 * @param  {object}
+	 * @return {Boolean}
+	 */
+	self.isActive = function(object) {
+		if(object.folderName() === self.dirs()[self.active()].folderName()) {
+			if(object.isVisible()) {
 				return true;
 			} else {
 				self.findNextVisible();
@@ -164,6 +229,10 @@ var startApp = function() {
 		}
 	}
 
+	/**
+	 * set self.active() to next visible object. If it reaches end, it starts from beginning
+	 * @return {void}
+	 */
 	self.findNextVisible = function() {
 		var numberOfDirs = self.dirs().length - 1;
 		if(self.active() < numberOfDirs) {
@@ -173,6 +242,10 @@ var startApp = function() {
 		}
 	};
 
+	/**
+	 * set self.active() to next visible object. If it reaches end, it starts from beginning
+	 * @return {void}
+	 */
 	self.findPrevVisible = function() {
 		var numberOfDirs = self.dirs().length - 1;
 		if(self.active() < numberOfDirs+1 && self.active() > 0) {
@@ -182,25 +255,13 @@ var startApp = function() {
 		}
 	};
 
-	self.isVisible = function(folderName) {
-		if(fuzzy(folderName,self.search())) {
-			return true;
-		} else {
-			return false;
-		}
-	};
-
-	self.goActive = function() {
-		window.location.href=window.location.href + self.dirs()[self.active()].folderName;
-	}
-
 	/*
 		Key binds
 	*/
 	$(document).keypress(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(keycode == '13'){
-			self.goActive();
+			self.dirs()[self.active()].go();
 		}
 	});
 	$(document).keydown(function(event){
@@ -215,6 +276,12 @@ var startApp = function() {
 }
 ko.applyBindings(new startApp);
 
+/**
+ * Fuzzy search
+ * @param  {string} haystack
+ * @param  {string} string to find
+ * @return {bool}
+ */
 function fuzzy (h,s) {
     var hay = h.toLowerCase(), i = 0, n = 0, l;
     s = s.toLowerCase();
