@@ -1,5 +1,5 @@
 {
-  "name": "StartScreen",
+  "name": "startdir",
   "version": "0.2.0",
   "devDependencies": {
     "grunt-contrib-concat": "*",
