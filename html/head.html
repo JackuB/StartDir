@@ -12,12 +12,15 @@
 	<div data-bind="foreach: dirs" class="dirs">
 		<div data-bind="
 			visible: isVisible,
-			css: {'active': isActive($data)}
+			css: {'active': isActive($data), 'invisible': hidden}
 			" class="box">
-			<span data-bind="text: folderName, click: go"></span>
+			<input type="text" class="dirEditInput" data-bind="visible: editing, hasFocus: editing, value: customFolderName, valueUpdate: 'keyup'" />
+			<span data-bind="visible: editing() === false, text: customFolderName, click: go"></span>
+			<div class="originalName" data-bind="text: folderName, visible: editing"></div>
 			<span class="visibilityIcon">
-				<span data-bind="visible: hidden() === true, click: toggleHidden" class="icon-eye"></span>
+				<span data-bind="visible: hidden, click: toggleHidden" class="icon-eye"></span>
 				<span data-bind="visible: hidden() === false, click: toggleHidden" class="icon-eye-blocked"></span>
+				<span class="icon-pencil" data-bind="click: edit"></span>
 			</span>
 		</div>
 	</div>
@@ -25,7 +28,8 @@
 
 
 <div class="settingsIcon">
-	<span class="icon-cogs"></span>
+	<span data-bind="visible: showHidden() === false, click: toggleVisibility" class="icon-eye"></span>
+	<span data-bind="visible: showHidden, click: toggleVisibility" class="icon-eye-blocked"></span>
 </div>
 
 <div class="bottomGrad"></div>

@@ -1,14 +1,5 @@
 <?php
 
-	$json_file = "start_config.json";
-
-	if(isset($_POST["save_json"])) {
-		$saved = json_decode($_POST["save_json"]);
-		file_put_contents($json_file, $saved);
-		echo "Saved";
-		die;
-	}
-
 	$disallowedDirs = array(
 		".",
 		"..",
@@ -22,7 +13,8 @@
 	        if (is_dir($entry) && !in_array($entry, $disallowedDirs)) {
 	            $dirArray[$i] = array(
 	            	"hidden" => false,
-	            	"folderName" => $entry
+	            	"folderName" => $entry,
+	            	"customFolderName" => $entry
 	            	);
 	            $i++;
 	        }
@@ -35,7 +27,7 @@
 		$loaded_json = file_get_contents($json_file);
 
 		/* Intersect JSON and computed array */
-		$returnedArray = array_intersect_key($dirArray, json_decode($loaded_json, true));
+		$returnedArray = array_intersect_key(json_decode($loaded_json, true), $dirArray);
 	} else {
 		file_put_contents($json_file, json_encode($dirArray));
 		$returnedArray = $dirArray;

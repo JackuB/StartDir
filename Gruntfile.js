@@ -6,6 +6,8 @@ module.exports = function(grunt) {
             },
             dist: {
                 src: [
+                    'php/config.php',
+                    'php/saving.php',
                     'html/head.html',
                     'separators/css_start.html',
                     'css/app.min.css',
