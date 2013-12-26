@@ -16,21 +16,8 @@ var startApp = function() {
 		var thisDir = this;
 		thisDir.hidden = ko.observable(dir.hidden);
 		thisDir.folderName = ko.observable(dir.folderName);
-		thisDir.customFolderName = ko.observable(dir.customFolderName);
-		thisDir.editing = ko.observable(false);
-		thisDir.toggleHidden = function() {
-			thisDir.hidden(!thisDir.hidden());
-		}
-		thisDir.edit = function(c,e) {
-			thisDir.editing(!thisDir.editing());
-		}
 		thisDir.isVisible = ko.computed(function() {
-			if(!self.showHidden()) {
-				if(thisDir.hidden()) {
-					return false;
-				}
-			}
-			if(fuzzy(thisDir.folderName(),self.search()) || fuzzy(thisDir.customFolderName(),self.search())) {
+			if(fuzzy(thisDir.folderName(),self.search())) {
 				return true;
 			} else {
 				return false;
@@ -54,9 +41,11 @@ var startApp = function() {
 	}
 
 	self.dirs = ko.observableArray();
-	var phpJSONLenght = phpJSON.length;
-	for (var i = 0; i < phpJSONLenght; i++) {
-		self.dirs.push(new dir(phpJSON[i]));
+	var phpArray = phpJSON;
+	var phpArrayLenght = phpArray.length;
+
+	for (var i = 0; i < phpArrayLenght; i++) {
+		self.dirs.push(new dir(phpArray[i]));
 	};
 
 	/**
@@ -85,21 +74,6 @@ var startApp = function() {
 		}
 	};
 
-	/**
-	 * Save app setting as JSON
-	 * @return {void}
-	 */
-	self.saveApp = function() {
-		$.post(window.location.href, {save_json: ko.toJSON(self.dirs())});
-	}
-
-	/**
-	 * toggle showHidden value
-	 * @return {[type]} [description]
-	 */
-	self.toggleVisibility = function() {
-		self.showHidden(!self.showHidden());
-	}
 
 	self.scrollToActive = ko.computed(function() {
 		self.active();
@@ -111,13 +85,13 @@ var startApp = function() {
 	/*
 		Key binds
 	*/
-	$(document).keypress(function(event){
+	window.onkeypress = function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(keycode == '13'){
 			self.dirs()[self.active()].go();
 		}
-	});
-	$(document).keydown(function(event){
+	};
+	window.onkeydown = function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(keycode == '40'){
 			self.findNextVisible();
@@ -125,7 +99,7 @@ var startApp = function() {
 		if(keycode == '38'){
 			self.findPrevVisible();
 		}
-	});
+	};
 }
 ko.applyBindings(new startApp);
 

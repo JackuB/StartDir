@@ -10,26 +10,6 @@
 <div class="wrap">
 	<input type="text" class="searchField" autofocus data-bind="value: search, valueUpdate: 'keyup'" />
 	<div data-bind="foreach: dirs" class="dirs">
-		<div data-bind="
-			visible: isVisible,
-			css: {'active': isActive($data), 'invisible': hidden}
-			" class="box">
-			<input type="text" class="dirEditInput" data-bind="visible: editing, hasFocus: editing, value: customFolderName, valueUpdate: 'keyup'" />
-			<span data-bind="visible: editing() === false, text: customFolderName, click: go"></span>
-			<div class="originalName" data-bind="text: folderName, visible: editing"></div>
-			<span class="visibilityIcon">
-				<span data-bind="visible: hidden, click: toggleHidden" class="icon-eye"></span>
-				<span data-bind="visible: hidden() === false, click: toggleHidden" class="icon-eye-blocked"></span>
-				<span class="icon-pencil" data-bind="click: edit"></span>
-			</span>
-		</div>
+		<div data-bind="css: {'active': isActive($data)}, visible: isVisible, text: folderName, click: go" class="box"></div>
 	</div>
 </div>
-
-
-<div class="settingsIcon">
-	<span data-bind="visible: showHidden() === false, click: toggleVisibility" class="icon-eye"></span>
-	<span data-bind="visible: showHidden, click: toggleVisibility" class="icon-eye-blocked"></span>
-</div>
-
-<div class="bottomGrad"></div>
