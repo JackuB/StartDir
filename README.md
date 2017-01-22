@@ -1,4 +1,6 @@
 #StartDir
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/JackuB/StartDir.svg)](https://greenkeeper.io/)
 Pretty folder listing in one .php file
 
 ## Features
